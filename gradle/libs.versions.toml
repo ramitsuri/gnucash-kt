@@ -3,13 +3,18 @@ kotlin = "2.1.10"
 kotlin-datetime = "0.6.2"
 kotlin-immutable-collections = "0.3.8"
 ktlint = "12.1.0"
+serialization = "1.8.0"
+shadowJar = "8.3.6"
 sqlite-jdbc = "3.49.1.0"
 
 [libraries]
 kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlin-datetime" }
 kotlin-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlin-immutable-collections" }
+serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 sqlite-jdbc = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite-jdbc" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadowJar = { id = "com.gradleup.shadow", version.ref = "shadowJar" }

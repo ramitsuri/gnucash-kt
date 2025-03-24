@@ -47,3 +47,7 @@ bin/
 
 *.gnucash
 /local.properties
+
+/input/config.json
+/input/*.gnucash
+/output/*
