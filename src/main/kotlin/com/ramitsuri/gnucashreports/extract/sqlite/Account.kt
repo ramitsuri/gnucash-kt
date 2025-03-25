@@ -16,6 +16,7 @@ fun Account.Companion.getResultSetMatcher() = ResultSetMatcher(
 fun Account.Companion.fromRow(row: Map<Field, String>) = Account(
     id = row.getOrError(Field.GUID),
     name = row.getOrError(Field.NAME),
+    fullName = "",
     type = AccountType.from(row.getOrError(Field.TYPE)),
     parentId = row.getOrError(Field.PARENT),
 )
