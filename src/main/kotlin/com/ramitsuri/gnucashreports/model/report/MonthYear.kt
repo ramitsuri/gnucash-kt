@@ -62,7 +62,7 @@ data class MonthYear(
             } else if (month > other.month) {
                 1
             } else {
-                1
+                0
             }
         }
     }
