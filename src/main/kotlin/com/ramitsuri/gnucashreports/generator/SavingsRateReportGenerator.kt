@@ -40,6 +40,7 @@ class SavingsRateReportGenerator(
         }
         val incomeAccount = Report.Account(
             name = "Income",
+            order = 0,
             monthTotals = getTotalsForAccount(relevantIncomeLeafAccounts)
                 .filter { it.key.year == year },
         )
@@ -50,6 +51,7 @@ class SavingsRateReportGenerator(
         }
         val taxesAccount = Report.Account(
             name = "Taxes",
+            order = 1,
             monthTotals = getTotalsForAccount(relevantTaxesLeafAccounts)
                 .filter { it.key.year == year },
         )
@@ -60,6 +62,7 @@ class SavingsRateReportGenerator(
         }
         val expensesWithoutTaxesAccount = Report.Account(
             name = "Expenses",
+            order = 2,
             monthTotals = getTotalsForAccount(relevantExpensesLeafAccounts)
                 .filter { it.key.year == year },
         )

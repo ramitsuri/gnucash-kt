@@ -23,6 +23,11 @@ data class Report(
         @SerialName("name")
         val name: String,
 
+        // Order in which this account should be displayed. It's there so that client can sort these
+        // accounts and build a new report if needed with maybe different month years in there.
+        @SerialName("order")
+        val order: Int,
+
         // Columns
         @SerialName("month_totals")
         val monthTotals: Map<MonthYear, @Serializable(BigDecimalSerializer::class) BigDecimal>,

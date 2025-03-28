@@ -44,6 +44,7 @@ class NetWorthReportGenerator(
 
         val account = Report.Account(
             name = "NetWorth",
+            order = 0,
             monthTotals = netWorthTotals
                 .filter { it.key.year == year },
         )

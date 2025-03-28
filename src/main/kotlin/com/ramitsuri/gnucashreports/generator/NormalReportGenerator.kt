@@ -46,9 +46,10 @@ class NormalReportGenerator(
             .filter {
                 it.type == reportConfig.accountType
             }
-            .mapNotNull { account ->
+            .mapIndexedNotNull { index, account ->
                 Report.Account(
                     name = account.fullName,
+                    order = index,
                     monthTotals = account.getTotalsForAccount()
                         .filter { it.key.year == year }
                         // Some account types just have negative balance but we want to show
