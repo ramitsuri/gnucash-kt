@@ -1,6 +1,5 @@
 package com.ramitsuri.gnucashreports.generator
 
-import com.ramitsuri.gnucashreports.model.report.Account
 import com.ramitsuri.gnucashreports.model.report.MonthYear
 import com.ramitsuri.gnucashreports.model.report.Report
 import com.ramitsuri.gnucashreports.model.report.ReportsByYear
@@ -47,7 +46,6 @@ class NetWorthReportGenerator(
             name = "NetWorth",
             monthTotals = netWorthTotals
                 .filter { it.key.year == year },
-            withCumulativeBalance = true,
         )
         reportWriter.write(
             ReportsByYear(
@@ -55,6 +53,7 @@ class NetWorthReportGenerator(
                 listOf(
                     Report(
                         name = "NetWorth",
+                        withCumulativeBalance = true,
                         accounts = listOf(account),
                     ),
                 ),

@@ -2,7 +2,6 @@ package com.ramitsuri.gnucashreports.generator
 
 import com.ramitsuri.gnucashreports.model.Account
 import com.ramitsuri.gnucashreports.model.AccountType
-import com.ramitsuri.gnucashreports.model.report.Account
 import com.ramitsuri.gnucashreports.model.report.Config
 import com.ramitsuri.gnucashreports.model.report.MonthYear
 import com.ramitsuri.gnucashreports.model.report.Report
@@ -63,7 +62,6 @@ class NormalReportGenerator(
                                 total
                             }
                         }.associate { it },
-                    withCumulativeBalance = isCumulative(reportConfig.accountType),
                 ).takeIf { reportAccount ->
                     reportAccount.monthTotals.isNotEmpty() &&
                         !reportAccount.monthTotals.values.all { it.compareTo(BigDecimal.ZERO) == 0 }
@@ -71,6 +69,7 @@ class NormalReportGenerator(
             }.let { reportAccounts ->
                 Report(
                     name = reportConfig.reportName,
+                    withCumulativeBalance = isCumulative(reportConfig.accountType),
                     accounts = reportAccounts,
                 )
             }.let {

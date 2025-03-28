@@ -1,6 +1,5 @@
 package com.ramitsuri.gnucashreports.generator
 
-import com.ramitsuri.gnucashreports.model.report.Account
 import com.ramitsuri.gnucashreports.model.report.Config
 import com.ramitsuri.gnucashreports.model.report.MonthYear
 import com.ramitsuri.gnucashreports.model.report.Report
@@ -43,7 +42,6 @@ class SavingsRateReportGenerator(
             name = "Income",
             monthTotals = getTotalsForAccount(relevantIncomeLeafAccounts)
                 .filter { it.key.year == year },
-            withCumulativeBalance = false,
         )
 
         val relevantTaxesLeafAccounts = leafAccountFullNameToTotalsMap.filter {
@@ -54,7 +52,6 @@ class SavingsRateReportGenerator(
             name = "Taxes",
             monthTotals = getTotalsForAccount(relevantTaxesLeafAccounts)
                 .filter { it.key.year == year },
-            withCumulativeBalance = false,
         )
 
         val relevantExpensesLeafAccounts = leafAccountFullNameToTotalsMap.filter {
@@ -65,11 +62,11 @@ class SavingsRateReportGenerator(
             name = "Expenses",
             monthTotals = getTotalsForAccount(relevantExpensesLeafAccounts)
                 .filter { it.key.year == year },
-            withCumulativeBalance = false,
         )
 
         Report(
             name = "Savings Rate",
+            withCumulativeBalance = false,
             accounts = listOf(incomeAccount, taxesAccount, expensesWithoutTaxesAccount),
         ).let {
             reportWriter.write(ReportsByYear(year, listOf(it)))
