@@ -46,9 +46,7 @@ class NetWorthReportGenerator(
         val account = Report.Account(
             name = "NetWorth",
             monthTotals = netWorthTotals
-                .filter { it.key.year == year }
-                .values
-                .toList(),
+                .filter { it.key.year == year },
             withCumulativeBalance = true,
         )
         reportWriter.write(

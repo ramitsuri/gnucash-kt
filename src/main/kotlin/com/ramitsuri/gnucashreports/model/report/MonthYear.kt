@@ -1,14 +1,21 @@
 package com.ramitsuri.gnucashreports.model.report
 
+import com.ramitsuri.gnucashreports.utils.MonthYearSerializer
 import com.ramitsuri.gnucashreports.utils.nowLocal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable(with = MonthYearSerializer::class)
 data class MonthYear(
+    @SerialName("month")
     val month: Month,
+
+    @SerialName("year")
     val year: Int,
 ) : Comparable<MonthYear> {
     fun next(): MonthYear {

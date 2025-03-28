@@ -22,7 +22,7 @@ data class Report(
     @Serializable
     sealed interface Account {
         val name: String
-        val monthTotals: List<@Serializable(BigDecimalSerializer::class) BigDecimal>
+        val monthTotals: Map<MonthYear, @Serializable(BigDecimalSerializer::class) BigDecimal>
 
         @Serializable
         @SerialName("with_cumulative_balance")
@@ -32,7 +32,7 @@ data class Report(
 
             // Columns
             @SerialName("month_totals")
-            override val monthTotals: List<@Serializable(BigDecimalSerializer::class) BigDecimal>,
+            override val monthTotals: Map<MonthYear, @Serializable(BigDecimalSerializer::class) BigDecimal>,
         ) : Account
 
         @Serializable
@@ -43,14 +43,14 @@ data class Report(
 
             // Columns
             @SerialName("month_totals")
-            override val monthTotals: List<@Serializable(BigDecimalSerializer::class) BigDecimal>,
+            override val monthTotals: Map<MonthYear, @Serializable(BigDecimalSerializer::class) BigDecimal>,
         ) : Account {
 
             @OptIn(ExperimentalSerializationApi::class)
             @Serializable(BigDecimalSerializer::class)
             @SerialName("total")
             @EncodeDefault(EncodeDefault.Mode.ALWAYS)
-            val total: BigDecimal = monthTotals.sumOf { it }
+            val total: BigDecimal = monthTotals.values.sumOf { it }
         }
 
         companion object
@@ -59,7 +59,7 @@ data class Report(
 
 fun Report.Companion.Account(
     name: String,
-    monthTotals: List<BigDecimal>,
+    monthTotals: Map<MonthYear, BigDecimal>,
     withCumulativeBalance: Boolean,
 ) = if (withCumulativeBalance) {
     WithCumulativeBalance(

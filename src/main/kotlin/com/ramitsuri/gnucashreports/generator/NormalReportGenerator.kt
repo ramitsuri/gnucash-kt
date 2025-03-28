@@ -52,23 +52,21 @@ class NormalReportGenerator(
                     name = account.fullName,
                     monthTotals = account.getTotalsForAccount()
                         .filter { it.key.year == year }
-                        .values
                         // Some account types just have negative balance but we want to show
                         // positive balance (most times) because it should be obvious from the
                         // report you're viewing that the money is leaving your wallet in that case
                         // (like liabilities)
-                        .map {
-                            if (reportConfig.shouldReverseSign) {
-                                it.times(BigDecimal("-1"))
+                        .map { (monthYear, total) ->
+                            monthYear to if (reportConfig.shouldReverseSign) {
+                                total.times(BigDecimal("-1"))
                             } else {
-                                it
+                                total
                             }
-                        }
-                        .toList(),
+                        }.associate { it },
                     withCumulativeBalance = isCumulative(reportConfig.accountType),
                 ).takeIf { reportAccount ->
                     reportAccount.monthTotals.isNotEmpty() &&
-                        !reportAccount.monthTotals.all { it.compareTo(BigDecimal.ZERO) == 0 }
+                        !reportAccount.monthTotals.values.all { it.compareTo(BigDecimal.ZERO) == 0 }
                 }
             }.let { reportAccounts ->
                 Report(

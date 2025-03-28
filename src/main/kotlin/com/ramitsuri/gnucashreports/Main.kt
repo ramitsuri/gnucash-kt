@@ -72,6 +72,7 @@ fun main() {
 
 private fun getJson() = Json {
     prettyPrint = true
+    allowStructuredMapKeys = true
 }
 
 private fun run(
