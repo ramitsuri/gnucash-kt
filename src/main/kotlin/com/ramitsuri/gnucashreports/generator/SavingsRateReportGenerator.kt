@@ -42,7 +42,9 @@ class SavingsRateReportGenerator(
             name = "Income",
             order = 0,
             monthTotals = getTotalsForAccount(relevantIncomeLeafAccounts)
-                .filter { it.key.year == year },
+                .filter { it.key.year == year }
+                // Income is generally negative on GnuCash but we want the positive value in this context
+                .mapValues { it.value.negate() },
         )
 
         val relevantTaxesLeafAccounts = leafAccountFullNameToTotalsMap.filter {
