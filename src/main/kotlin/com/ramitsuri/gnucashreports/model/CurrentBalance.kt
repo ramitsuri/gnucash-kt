@@ -15,5 +15,5 @@ data class CurrentBalance(
     val balance: BigDecimal,
 
     @SerialName("group_name")
-    val groupName: String? = null,
+    val groupName: String,
 )

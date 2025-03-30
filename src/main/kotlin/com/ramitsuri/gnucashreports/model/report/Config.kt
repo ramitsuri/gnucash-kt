@@ -124,7 +124,7 @@ data class Config(
         val validUntil: LocalDateTime,
 
         @SerialName("group_name")
-        val groupName: String? = null,
+        val groupName: String,
     )
 
     @Serializable
@@ -136,22 +136,11 @@ data class Config(
         val displayName: String,
 
         @SerialName("group_name")
-        val groupName: String? = null,
+        val groupName: String,
 
         @SerialName("balance")
         val balanceType: BalanceType,
     ) {
-        constructor(
-            accountName: String,
-            displayName: String,
-            groupName: String? = null,
-            balanceType: BalanceType,
-        ) : this(
-            accountNames = listOf(accountName),
-            displayName = displayName,
-            groupName = groupName,
-            balanceType = balanceType,
-        )
 
         enum class BalanceType {
             CURRENT_MONTH,
