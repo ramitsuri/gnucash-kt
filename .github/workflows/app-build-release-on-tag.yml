@@ -34,3 +34,4 @@ jobs:
           automatic_release_tag: ${{ github.ref_name }}
           files: |
             build/libs/app.jar
+            app_version.txt
