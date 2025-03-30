@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.ramitsuri"
-version = "1.0-SNAPSHOT"
+version = libs.versions.appVersion.get()
 
 application {
     mainClass= "com.ramitsuri.gnucashreports.MainKt"
