@@ -62,12 +62,13 @@ class CurrentBalancesGenerator(
             val txAmount = tx.splits.first { it.amount < BigDecimal.ZERO }.amount
             txGroupsToBalancesMap[tx.num] = currentBalance.add(txAmount)
         }
-        return txGroupsConfig.map {
+        return txGroupsConfig.mapNotNull {
+            val balance = txGroupsToBalancesMap[it.identifier] ?: return@mapNotNull null
             CurrentBalance(
                 name = it.displayName,
                 // Absolute value because it could be negative but it's understood that this money
                 // went away so it's positive for displaying
-                balance = (txGroupsToBalancesMap[it.identifier] ?: BigDecimal.ZERO).abs(),
+                balance = balance.abs(),
                 groupName = it.groupName,
             )
         }
