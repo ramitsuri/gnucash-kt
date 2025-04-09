@@ -2,6 +2,7 @@ package com.ramitsuri.gnucashreports
 
 import com.ramitsuri.gnucashreports.extract.sqlite.SqliteExtractor
 import com.ramitsuri.gnucashreports.generator.CurrentBalancesGenerator
+import com.ramitsuri.gnucashreports.generator.InfoGenerator
 import com.ramitsuri.gnucashreports.generator.NetWorthReportGenerator
 import com.ramitsuri.gnucashreports.generator.NormalReportGenerator
 import com.ramitsuri.gnucashreports.generator.SavingsRateReportGenerator
@@ -13,6 +14,7 @@ import com.ramitsuri.gnucashreports.utils.CumulativeDeterminer
 import com.ramitsuri.gnucashreports.utils.minus
 import com.ramitsuri.gnucashreports.writer.TransactionsWriter
 import com.ramitsuri.gnucashreports.writer.file.FileCurrentBalancesWriter
+import com.ramitsuri.gnucashreports.writer.file.FileInfoWriter
 import com.ramitsuri.gnucashreports.writer.file.FileReportWriter
 import com.ramitsuri.gnucashreports.writer.file.FileTransactionsWriter
 import kotlinx.datetime.Clock
@@ -66,6 +68,12 @@ fun main() {
             ),
             cumulativeDeterminer = cumulativeDeterminer,
         ),
+        infoGenerator = InfoGenerator(
+            infoWriter = FileInfoWriter(
+                basePath = "output",
+                json = json,
+            ),
+        ),
         cumulativeDeterminer = cumulativeDeterminer,
     )
 }
@@ -82,6 +90,7 @@ private fun run(
     netWorthReportGenerator: NetWorthReportGenerator,
     savingsRateReportGenerator: SavingsRateReportGenerator,
     currentBalancesGenerator: CurrentBalancesGenerator,
+    infoGenerator: InfoGenerator,
     cumulativeDeterminer: CumulativeDeterminer,
 ) {
     val since = getStartingMonthYear(recent = config.recentTransactionsOnly)
@@ -189,6 +198,7 @@ private fun run(
                 leafAccountFullNameToWithoutCumulativeTotalsMap = leafAccountFullNameToWithoutCumulativeTotals,
             )
         }
+    infoGenerator.generate(config.file)
 }
 
 private fun getStartingMonthYear(
