@@ -48,7 +48,6 @@ data class MonthYear(
         ): MonthYear {
             return clock.nowLocal(timeZone).let { MonthYear(year = it.year, month = it.month) }
         }
-
     }
 
     override operator fun compareTo(other: MonthYear): Int {

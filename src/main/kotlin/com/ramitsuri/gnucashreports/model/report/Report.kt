@@ -1,9 +1,9 @@
 package com.ramitsuri.gnucashreports.model.report
 
 import com.ramitsuri.gnucashreports.utils.BigDecimalSerializer
+import java.math.BigDecimal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.math.BigDecimal
 
 @Serializable
 data class Report(
@@ -30,6 +30,10 @@ data class Report(
 
         // Columns
         @SerialName("month_totals")
-        val monthTotals: Map<MonthYear, @Serializable(BigDecimalSerializer::class) BigDecimal>,
+        val monthTotals: Map<
+            MonthYear,
+            @Serializable(BigDecimalSerializer::class)
+            BigDecimal,
+            >,
     )
 }

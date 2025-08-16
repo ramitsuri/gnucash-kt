@@ -1,9 +1,9 @@
 package com.ramitsuri.gnucashreports.model.report
 
-import org.junit.jupiter.api.Test
 import com.ramitsuri.gnucashreports.model.report.Config.Report.Filter
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import org.junit.jupiter.api.Test
 
 class ConfigTest {
 

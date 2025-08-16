@@ -3,9 +3,9 @@ package com.ramitsuri.gnucashreports.writer.file
 import com.ramitsuri.gnucashreports.model.report.Report
 import com.ramitsuri.gnucashreports.model.report.ReportsByYear
 import com.ramitsuri.gnucashreports.writer.ReportWriter
-import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlinx.serialization.json.Json
 
 class FileReportWriter(
     private val basePath: String,
