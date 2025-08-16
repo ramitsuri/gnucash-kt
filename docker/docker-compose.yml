@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  gnu-cash-kt:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    container_name: gnu-cash-kt
+    restart: unless-stopped
+    volumes:
+      - ./input:/app/input
+      - ./output:/app/output
+    ports:
+      - "8001:80"
