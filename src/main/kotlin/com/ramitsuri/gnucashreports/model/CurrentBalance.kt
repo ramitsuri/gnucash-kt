@@ -1,9 +1,9 @@
 package com.ramitsuri.gnucashreports.model
 
 import com.ramitsuri.gnucashreports.utils.BigDecimalSerializer
+import java.math.BigDecimal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.math.BigDecimal
 
 @Serializable
 data class CurrentBalance(

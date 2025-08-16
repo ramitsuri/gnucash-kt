@@ -17,13 +17,13 @@ import com.ramitsuri.gnucashreports.writer.file.FileCurrentBalancesWriter
 import com.ramitsuri.gnucashreports.writer.file.FileInfoWriter
 import com.ramitsuri.gnucashreports.writer.file.FileReportWriter
 import com.ramitsuri.gnucashreports.writer.file.FileTransactionsWriter
+import java.io.File
+import java.math.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.serialization.json.Json
-import java.io.File
-import java.math.BigDecimal
 
 fun main() {
     val json = getJson()
@@ -83,6 +83,7 @@ private fun getJson() = Json {
     allowStructuredMapKeys = true
 }
 
+@Suppress("ReplaceGetOrSet")
 private fun run(
     config: Config,
     transactionsWriter: TransactionsWriter,
@@ -124,8 +125,11 @@ private fun run(
                                 val monthYear = MonthYear(month, year)
                                 // Put cumulative total
                                 val accountTotalsCumulative =
-                                    (leafAccountFullNameToWithCumulativeTotals[leafAccount.fullName]
-                                        ?: mapOf()).toMutableMap()
+                                    (
+                                        leafAccountFullNameToWithCumulativeTotals
+                                            .get(leafAccount.fullName) ?: mapOf()
+                                        )
+                                        .toMutableMap()
                                 val cumulativeTotalForMonth =
                                     accountTotalsCumulative.getPreviousTotal(monthYear, since)
                                         .plus(accountTotalForMonth)
@@ -135,8 +139,11 @@ private fun run(
 
                                 // Put without cumulative total
                                 val accountTotals =
-                                    (leafAccountFullNameToWithoutCumulativeTotals[leafAccount.fullName]
-                                        ?: mapOf()).toMutableMap()
+                                    (
+                                        leafAccountFullNameToWithoutCumulativeTotals
+                                            .get(leafAccount.fullName) ?: mapOf()
+                                        )
+                                        .toMutableMap()
                                 accountTotals[monthYear] = accountTotalForMonth
                                 leafAccountFullNameToWithoutCumulativeTotals[leafAccount.fullName] =
                                     accountTotals
@@ -154,7 +161,8 @@ private fun run(
                             when (reportConfig) {
                                 is Config.Report.Normal -> {
                                     val isCumulative = reportConfig.withCumulativeBalance
-                                        ?: cumulativeDeterminer.isAccountTypeCumulative(reportConfig.accountType)
+                                        ?: cumulativeDeterminer
+                                            .isAccountTypeCumulative(reportConfig.accountType)
                                     normalReportGenerator.generate(
                                         accounts = result.accounts,
                                         leafAccountFullNameToTotalsMap = if (isCumulative) {
@@ -169,7 +177,8 @@ private fun run(
 
                                 is Config.Report.NetWorth -> {
                                     netWorthReportGenerator.generate(
-                                        leafAccountFullNameToTotalsMap = leafAccountFullNameToWithCumulativeTotals,
+                                        leafAccountFullNameToTotalsMap =
+                                        leafAccountFullNameToWithCumulativeTotals,
                                         assetsRootAccount = config.assetsRootAccount,
                                         liabilitiesRootAccount = config.liabilitiesRootAccount,
                                         year = year,
@@ -178,7 +187,8 @@ private fun run(
 
                                 is Config.Report.SavingsRate -> {
                                     savingsRateReportGenerator.generate(
-                                        leafAccountFullNameToTotalsMap = leafAccountFullNameToWithoutCumulativeTotals,
+                                        leafAccountFullNameToTotalsMap =
+                                        leafAccountFullNameToWithoutCumulativeTotals,
                                         expensesWithoutTaxesFilter = reportConfig.expensesFilter,
                                         taxesFilter = reportConfig.taxesFilter,
                                         incomeFilter = reportConfig.incomeFilter,
@@ -194,8 +204,10 @@ private fun run(
                 txGroupsConfig = config.txGroups,
                 transactions = result.transactions,
                 accountBalancesConfig = config.accountBalances,
-                leafAccountFullNameToCumulativeTotalsMap = leafAccountFullNameToWithCumulativeTotals,
-                leafAccountFullNameToWithoutCumulativeTotalsMap = leafAccountFullNameToWithoutCumulativeTotals,
+                leafAccountFullNameToCumulativeTotalsMap =
+                leafAccountFullNameToWithCumulativeTotals,
+                leafAccountFullNameToWithoutCumulativeTotalsMap =
+                leafAccountFullNameToWithoutCumulativeTotals,
             )
         }
     infoGenerator.generate(config.file)

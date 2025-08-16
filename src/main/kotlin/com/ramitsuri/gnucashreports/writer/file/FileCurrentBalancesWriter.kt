@@ -2,10 +2,10 @@ package com.ramitsuri.gnucashreports.writer.file
 
 import com.ramitsuri.gnucashreports.model.CurrentBalance
 import com.ramitsuri.gnucashreports.writer.CurrentBalancesWriter
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 
 class FileCurrentBalancesWriter(
     private val basePath: String,

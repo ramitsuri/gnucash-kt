@@ -1,6 +1,7 @@
 package com.ramitsuri.gnucashreports.utils
 
 import com.ramitsuri.gnucashreports.model.report.MonthYear
+import java.math.BigDecimal
 import kotlinx.datetime.Month
 import kotlinx.datetime.number
 import kotlinx.serialization.KSerializer
@@ -8,7 +9,6 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.math.BigDecimal
 
 class BigDecimalSerializer : KSerializer<BigDecimal> {
     override val descriptor = PrimitiveSerialDescriptor("BigDecimal", PrimitiveKind.STRING)

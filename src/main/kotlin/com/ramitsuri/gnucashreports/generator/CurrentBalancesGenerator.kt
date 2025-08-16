@@ -9,9 +9,9 @@ import com.ramitsuri.gnucashreports.utils.isAfterOrSame
 import com.ramitsuri.gnucashreports.utils.isParentOfOrSelf
 import com.ramitsuri.gnucashreports.utils.nowLocal
 import com.ramitsuri.gnucashreports.writer.CurrentBalancesWriter
+import java.math.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
-import java.math.BigDecimal
 
 class CurrentBalancesGenerator(
     private val writer: CurrentBalancesWriter,
@@ -27,16 +27,18 @@ class CurrentBalancesGenerator(
         leafAccountFullNameToCumulativeTotalsMap: Map<String, Map<MonthYear, BigDecimal>>,
         leafAccountFullNameToWithoutCumulativeTotalsMap: Map<String, Map<MonthYear, BigDecimal>>,
     ) {
-        (generateTxGroups(
-            txGroupsConfig = txGroupsConfig,
-            transactions = transactions,
-        ) + generateAccountBalances(
-            accountBalancesConfig = accountBalancesConfig,
-            leafAccountFullNameToCumulativeTotalsMap =
+        (
+            generateTxGroups(
+                txGroupsConfig = txGroupsConfig,
+                transactions = transactions,
+            ) + generateAccountBalances(
+                accountBalancesConfig = accountBalancesConfig,
+                leafAccountFullNameToCumulativeTotalsMap =
                 leafAccountFullNameToCumulativeTotalsMap,
-            leafAccountFullNameToWithoutCumulativeTotalsMap =
+                leafAccountFullNameToWithoutCumulativeTotalsMap =
                 leafAccountFullNameToWithoutCumulativeTotalsMap,
-        )).let {
+            )
+            ).let {
             writer.write(it)
         }
     }

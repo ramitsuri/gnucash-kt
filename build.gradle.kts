@@ -10,7 +10,7 @@ group = "com.ramitsuri"
 version = libs.versions.appVersion.get()
 
 application {
-    mainClass= "com.ramitsuri.gnucashreports.MainKt"
+    mainClass = "com.ramitsuri.gnucashreports.MainKt"
 }
 
 repositories {

@@ -2,9 +2,9 @@ package com.ramitsuri.gnucashreports.generator
 
 import com.ramitsuri.gnucashreports.model.Info
 import com.ramitsuri.gnucashreports.writer.InfoWriter
+import java.io.File
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import java.io.File
 
 class InfoGenerator(
     private val infoWriter: InfoWriter,

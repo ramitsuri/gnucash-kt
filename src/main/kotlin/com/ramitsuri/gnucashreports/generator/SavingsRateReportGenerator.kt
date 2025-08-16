@@ -49,7 +49,7 @@ class SavingsRateReportGenerator(
 
         val relevantTaxesLeafAccounts = leafAccountFullNameToTotalsMap.filter {
             expensesRootAccount.isParentOfOrSelf(it.key) &&
-                    taxesFilter.canInclude(it.key)
+                taxesFilter.canInclude(it.key)
         }
         val taxesAccount = Report.Account(
             name = "Taxes",
@@ -60,7 +60,7 @@ class SavingsRateReportGenerator(
 
         val relevantExpensesLeafAccounts = leafAccountFullNameToTotalsMap.filter {
             expensesRootAccount.isParentOfOrSelf(it.key) &&
-                    expensesWithoutTaxesFilter.canInclude(it.key)
+                expensesWithoutTaxesFilter.canInclude(it.key)
         }
         val expensesWithoutTaxesAccount = Report.Account(
             name = "Expenses",

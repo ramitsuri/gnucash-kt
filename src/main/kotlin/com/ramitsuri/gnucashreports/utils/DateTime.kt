@@ -9,18 +9,15 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-fun LocalDateTime.minus(
-    period: DateTimePeriod,
-): LocalDateTime {
+fun LocalDateTime.minus(period: DateTimePeriod): LocalDateTime {
     val timeZone = TimeZone.UTC
     return toInstant(timeZone)
         .minus(period, timeZone)
         .toLocalDateTime(timeZone)
 }
 
-fun Clock.nowLocal(
-    timeZone: TimeZone = TimeZone.currentSystemDefault(),
-): LocalDateTime = now().toLocalDateTime(timeZone)
+fun Clock.nowLocal(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDateTime =
+    now().toLocalDateTime(timeZone)
 
 fun MonthYear.toLocalDateTime(): LocalDateTime = LocalDateTime(
     year = year,
@@ -32,9 +29,7 @@ fun MonthYear.toLocalDateTime(): LocalDateTime = LocalDateTime(
     nanosecond = 0,
 )
 
-fun MonthYear.minus(
-    period: DateTimePeriod,
-): MonthYear {
+fun MonthYear.minus(period: DateTimePeriod): MonthYear {
     return MonthYear(toLocalDateTime().minus(period))
 }
 
