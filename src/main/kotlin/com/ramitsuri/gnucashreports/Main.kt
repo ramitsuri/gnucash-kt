@@ -201,7 +201,7 @@ private fun run(
                         }
                 }
             currentBalancesGenerator.generate(
-                txGroupsConfig = config.txGroups,
+                txGroupConfig = config.txGroupConfig,
                 transactions = result.transactions,
                 accountBalancesConfig = config.accountBalances,
                 leafAccountFullNameToCumulativeTotalsMap =
