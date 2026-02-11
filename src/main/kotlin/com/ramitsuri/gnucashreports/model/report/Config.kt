@@ -2,7 +2,6 @@ package com.ramitsuri.gnucashreports.model.report
 
 import com.ramitsuri.gnucashreports.model.AccountType
 import com.ramitsuri.gnucashreports.utils.isParentOfOrSelf
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -29,8 +28,8 @@ data class Config(
     @SerialName("recent_transactions_only")
     val recentTransactionsOnly: Boolean,
 
-    @SerialName("tx_groups")
-    val txGroups: List<TxGroup>,
+    @SerialName("tx_group_config")
+    val txGroupConfig: TxGroupConfig,
 
     @SerialName("account_balances")
     val accountBalances: List<AccountBalance>,
@@ -113,19 +112,25 @@ data class Config(
     }
 
     @Serializable
-    data class TxGroup(
-        @SerialName("identifier")
-        val identifier: String,
+    data class TxGroupConfig(
+        @SerialName("days_in_past_to_include")
+        val daysInPastToInclude: Int,
 
-        @SerialName("display_name")
-        val displayName: String,
+        @SerialName("tx_groups")
+        val txGroups: List<TxGroup>,
+    ) {
+        @Serializable
+        data class TxGroup(
+            @SerialName("identifier")
+            val identifier: String,
 
-        @SerialName("valid_until")
-        val validUntil: LocalDateTime,
+            @SerialName("display_name")
+            val displayName: String,
 
-        @SerialName("group_name")
-        val groupName: String,
-    )
+            @SerialName("group_name")
+            val groupName: String,
+        )
+    }
 
     @Serializable
     data class AccountBalance(

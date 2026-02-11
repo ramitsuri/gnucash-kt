@@ -5,13 +5,15 @@ import com.ramitsuri.gnucashreports.model.Transaction
 import com.ramitsuri.gnucashreports.model.report.Config
 import com.ramitsuri.gnucashreports.model.report.MonthYear
 import com.ramitsuri.gnucashreports.utils.CumulativeDeterminer
-import com.ramitsuri.gnucashreports.utils.isAfterOrSame
 import com.ramitsuri.gnucashreports.utils.isParentOfOrSelf
 import com.ramitsuri.gnucashreports.utils.nowLocal
 import com.ramitsuri.gnucashreports.writer.CurrentBalancesWriter
 import java.math.BigDecimal
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 
 class CurrentBalancesGenerator(
     private val writer: CurrentBalancesWriter,
@@ -21,7 +23,7 @@ class CurrentBalancesGenerator(
 ) {
 
     fun generate(
-        txGroupsConfig: List<Config.TxGroup>,
+        txGroupConfig: Config.TxGroupConfig,
         transactions: List<Transaction>,
         accountBalancesConfig: List<Config.AccountBalance>,
         leafAccountFullNameToCumulativeTotalsMap: Map<String, Map<MonthYear, BigDecimal>>,
@@ -29,7 +31,7 @@ class CurrentBalancesGenerator(
     ) {
         (
             generateTxGroups(
-                txGroupsConfig = txGroupsConfig,
+                config = txGroupConfig,
                 transactions = transactions,
             ) + generateAccountBalances(
                 accountBalancesConfig = accountBalancesConfig,
@@ -44,34 +46,50 @@ class CurrentBalancesGenerator(
     }
 
     private fun generateTxGroups(
-        txGroupsConfig: List<Config.TxGroup>,
+        config: Config.TxGroupConfig,
         transactions: List<Transaction>,
     ): List<CurrentBalance> {
-        val txGroupsToBalancesMap = txGroupsConfig
-            .filter {
-                it.validUntil.isAfterOrSame(clock.nowLocal(timeZone))
-            }
-            .map {
-                it.identifier to BigDecimal.ZERO
-            }
-            .associate { it }
-            .toMutableMap()
+        val txGroupsToBalanceDateMap = mutableMapOf<String, TxGroupBalanceDate>()
         transactions.forEach { tx ->
             if (tx.num.isEmpty()) {
                 return@forEach
             }
-            val currentBalance = txGroupsToBalancesMap[tx.num] ?: return@forEach
-            val txAmount = tx.splits.first { it.amount < BigDecimal.ZERO }.amount
-            txGroupsToBalancesMap[tx.num] = currentBalance.add(txAmount)
+            val currentBalanceDate = txGroupsToBalanceDateMap[tx.num] ?: TxGroupBalanceDate()
+            txGroupsToBalanceDateMap[tx.num] = currentBalanceDate.update(tx)
         }
-        return txGroupsConfig.mapNotNull {
-            val balance = txGroupsToBalancesMap[it.identifier] ?: return@mapNotNull null
-            CurrentBalance(
-                name = it.displayName,
-                // Absolute value because it could be negative but it's understood that this money
-                // went away so it's positive for displaying
-                balance = balance.abs(),
-                groupName = it.groupName,
+        val today = clock.nowLocal(timeZone).date
+        val daysInPast = DatePeriod(days = config.daysInPastToInclude)
+        val oldestTxDateToInclude = today.minus(daysInPast)
+        return txGroupsToBalanceDateMap
+            .filterValues { balanceDate ->
+                balanceDate.mostRecentTxDate >= oldestTxDateToInclude
+            }
+            .mapNotNull { (identifier, txGroupBalanceDate) ->
+                val txGroup = config
+                    .txGroups
+                    .find { it.identifier == identifier }
+                CurrentBalance(
+                    name = txGroup?.displayName ?: identifier,
+                    // Absolute value because it could be negative, but it's understood that
+                    // this money went away so it's positive for displaying
+                    balance = txGroupBalanceDate.balance.abs(),
+                    groupName = txGroup?.groupName ?: "Tx Group",
+                )
+            }
+    }
+
+    private data class TxGroupBalanceDate(
+        val balance: BigDecimal = BigDecimal.ZERO,
+        val mostRecentTxDate: LocalDate = LocalDate(1970, 1, 1),
+    ) {
+        // Creates a copy adding balance of transaction split (one whose amount is negative) with
+        // current balance and date of transaction if it's newer than current date otherwise
+        // current date
+        fun update(tx: Transaction): TxGroupBalanceDate {
+            val txAmount = tx.splits.first { it.amount < BigDecimal.ZERO }.amount
+            return TxGroupBalanceDate(
+                balance = balance + txAmount,
+                mostRecentTxDate = maxOf(tx.date, mostRecentTxDate),
             )
         }
     }
